@@ -101,7 +101,10 @@ class Cozinheiro(Pessoa):
 
     
     def verificar_estoque(self):   
-        return super().verificar_estoque()
+        print(f"{self.nome}: Verificando apenas ingredientes usados na cozinha.")
+        for item, quantidade in self.estoque.items():
+            if item in ["massa_fresca", "molho_tomate", "azeite_oliva"]:
+                print(f"{item}: {quantidade}")
     
     def verificar_pedidos(self):
         print(self.pedidos)
@@ -122,8 +125,11 @@ class Gerencia(Pessoa):
         super().__init__(nome, cpf, salario)
 
     def verificar_estoque(self):
-        return super().verificar_estoque()
-    
+        print(f"{self.nome}: Conferindo mesas e estoque geral antes de atender.")
+        print("Mesas disponíveis:")
+        for tipo, qtd in self.mesas.items():
+            print(f"{tipo}: {qtd} mesas")    
+
     def controle_de_mesas(self):
         print(self.mesas)
         menu = int(input('''1 - Reduzir mesas de 2 pessoas
