@@ -97,6 +97,11 @@ class Cozinheiro(Pessoa):
         else:
             vendas[prato.nome] = 1
 
+        for pedido in self.pedidos:
+            if pedido.nome == prato:
+                self.pedidos.remove(pedido)
+                break
+        
         print(f'Mamma Mia!! O prato {prato.nome} foi feito com sucesso! HMMMMMM!!!!')
 
     
@@ -113,12 +118,20 @@ class Garcom(Pessoa):
     def __init__(self, nome, cpf, salario=1412):
         super().__init__(nome, cpf, salario)
 
-    def enviar_pedidos(self, ingredientes, tipo, preco, tempo):
-        prato = Prato(ingredientes, tipo, preco, tempo)
-        self.pedidos.append(prato)
+    def enviar_pedidos(self, pedido, cardápio):
+        for prato in cardápio:
+            if prato.nome == pedido:
+                self.pedidos.append(prato)
 
     def verificar_estoque(self):
-        return super().verificar_estoque()
+        #return super().verificar_estoque()
+        indisponiveis = []
+        for item in self.estoque:
+            if self.estoque[item] < 1:
+                for prato in cardápio:
+                    if item in prato.ingredientes and not(prato in indisponiveis):
+                        indisponiveis.append(prato)
+        print(f'Os pratos {", ".join(indisponiveis)} estão indisponíveis no momento. :(')
     
 class Gerencia(Pessoa):
     def __init__(self, nome, cpf, salario=1412):
