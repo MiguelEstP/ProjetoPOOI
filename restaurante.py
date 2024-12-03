@@ -215,14 +215,11 @@ class Estatisticas:
             print("Nenhuma venda registrada para calcular o ticket médio.")
             return None
 
-        # Soma o total arrecadado em dinheiro
         total_arrecadado = sum(prato.preco * quantidade for prato_nome, quantidade in self.inventario.vendas.items()
                                for prato in self.inventario.pratos if prato.nome == prato_nome)
 
-        # Soma o total de pratos vendidos
         total_vendas = sum(self.inventario.vendas.values())
 
-        # Calcula o ticket médio
         ticket_medio = total_arrecadado / total_vendas
         print(f"Ticket médio: R$ {ticket_medio:.2f}")
         return ticket_medio
