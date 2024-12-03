@@ -150,10 +150,13 @@ class Gerencia(Pessoa):
             while valor > 0:
                 if valor >= 8:
                     self.mesas['oito_lugares'] -= 1
+                    valor -= 8
                 elif valor >=4:
                     self.mesas['quatro_lugares'] -= 1
+                    valor -= 4
                 elif valor >=2:
                     self.mesas['dois_lugares'] -= 1
+                    valor -= 2
                 else:
                     print('error')
         else:
