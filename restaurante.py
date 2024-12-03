@@ -1,15 +1,15 @@
 class Cardapio:
     def __init__(self):
         self.pratos = [
-            Prato("Bruschetta", ["tomate", "manjericão", "azeite_oliva"], "entrada", 15.00, 10),
+            Prato("Bruschetta com azeitona", ["azeitonas_pretas", "tomate", "manjericão", "azeite_oliva"], "entrada", 15.00, 10),
             Prato("Salada Caprese", ["mussarela", "tomate", "manjericão"], "entrada", 18.00, 12),
-            Prato("Spaghetti ao molho de tomate", ["massa_fresca", "molho_tomate", "manjericão"], "prato principal", 30.00, 20),
-            Prato("Lasanha à bolonhesa", ["massa_fresca", "molho_tomate", "queijo_parmesao"], "prato principal", 35.00, 25),
-            Prato("Pizza Margherita", ["massa_fresca", "molho_tomate", "queijo_mussarela", "manjericão"], "prato principal", 40.00, 18),
+            Prato("Spaghetti ao molho de tomate e azeitonas", ["azeitonas_verdes", "massa_fresca", "molho_tomate", "manjericão"], "prato principal", 30.00, 20),
+            Prato("Lasanha à bolonhesa", ["azeitonas_verdes", "massa_fresca", "molho_tomate", "queijo_parmesao"], "prato principal", 35.00, 25),
+            Prato("Pizza Margherita", ["massa_fresca", "molho_tomate", "queijo_mussarela", "manjericão", "azeitonas_verdes"], "prato principal", 40.00, 18),
             Prato("Pizza Parma com rúcula", ["massa_fresca", "presunto_parma", "rúcula"], "prato principal", 45.00, 22),
             Prato("Gnocchi ao molho pesto", ["massa_fresca", "pesto"], "prato principal", 32.00, 20),
-            Prato("Risoto de tomate seco", ["arroz", "tomate_seco", "queijo_parmesao"], "prato principal", 38.00, 28),
-            Prato("Massa com azeite e alho", ["massa_fresca", "azeite_oliva", "alho"], "prato principal", 28.00, 15),
+            Prato("Risoto de azeitona com tomate seco", ["azeitonas_pretas", "arroz", "tomate_seco", "queijo_parmesao"], "prato principal", 38.00, 28),
+            Prato("Massa com azeitonas, azeite e alho", ["azeitonas_verdes", "azeitonas_pretas", "massa_fresca", "azeite_oliva", "alho"], "prato principal", 28.00, 15),
             Prato("Carpaccio de linguiça italiana", ["linguiça_italiana", "rúcula"], "entrada", 20.00, 10)
         ]
         '''self.bebidas = [] - cpa vamos usar'''
