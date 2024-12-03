@@ -55,6 +55,8 @@ class Inventario:
             "azeitonas_verdes": 14,   # Quantidade em unidades
             }
         self.pedidos = []
+        self.vendas = {}
+        self.uso_ingredientes = {}
     
 class Pessoa(Inventario):
     def __init__(self, nome, cpf, salario=1412.00):
@@ -73,16 +75,32 @@ class Cozinheiro(Pessoa):
         super().__init__(nome, cpf, salario)
         self.estagiario = estagiario
     
-    def cozinhar(self, prato, ingredientes):
-        for c in self.estoque.keys():
-            for j in ingredientes:
-                if j == c and c > 0:
-                    c -= 1
-                else:
-                    print('erro')
-        print(f'Mamma Mia!! O prato {prato} foi feito com sucesso! HMMMMMM!!!!')
+    def cozinhar(self, prato, estoque, uso_ingredientes, vendas):
+        faltando = []
+        for ingrediente in prato.ingredientes:
+            if ingrediente not in estoque or estoque[ingrediente] <= 0:
+                faltando.append(ingrediente)
+
+        if faltando:
+            print(f"Erro: Não há estoque suficiente para os ingredientes: {', '.join(faltando)}")
+            return
+
+        for ingrediente in prato.ingredientes:
+            estoque[ingrediente] -= 1
+            if ingrediente in uso_ingredientes:
+                uso_ingredientes[ingrediente] += 1
+            else:
+                uso_ingredientes[ingrediente] = 1
+
+        if prato.nome in vendas:
+            vendas[prato.nome] += 1
+        else:
+            vendas[prato.nome] = 1
+
+        print(f'Mamma Mia!! O prato {prato.nome} foi feito com sucesso! HMMMMMM!!!!')
+
     
-    def verificar_estoque(self):
+    def verificar_estoque(self):   
         return super().verificar_estoque()
     
     def verificar_pedidos(self):
@@ -144,15 +162,18 @@ class Gerencia(Pessoa):
     def controle_de_estoque(self):
         print(self.estoque)
         item, valor = input('Digite o item e o novo valor dele: ').split()
-        self.estoque[item] = int(valor)
+        if item in self.estoque:
+            self.estoque[item] = max(0, int(valor))
+        else:
+            print(f"Erro: Item '{item}' não encontrado no estoque.")
         
 class Estatisticas:
-    def __init__(self):
+    def __init__(self, inventario):
         self.cozinheiros = []
         self.garcons = []
         self.gerencia = []
         self.funcionarios = [self.cozinheiros, self.garcons, self.gerencia]
-        self.vendas = []
+        self.inventario = inventario
 
     def registrar_cozinheiro(self):
         nome, cpf, salario, estagiario = input('Digite as informações base: ').split()
@@ -170,11 +191,38 @@ class Estatisticas:
         self.gerencia.append(gerente)
     
     def prato_mais_vendido(self):
-        return True
+        if not self.inventario.vendas:
+            print("Nenhum prato foi vendido ainda.")
+            return None
+        
+        mais_vendido = max(self.inventario.vendas, key=self.inventario.vendas.get)
+        vendas = self.inventario.vendas[mais_vendido]
+        print(f"Prato mais vendido: {mais_vendido} com {vendas} vendas.")
+        return mais_vendido
     
     def ingrediente_mais_usado(self):
-        return True
+        if not self.inventario.uso_ingredientes:
+            print("Nenhum ingrediente foi usado ainda.")
+            return None
+
+        mais_usado = max(self.inventario.uso_ingredientes, key=self.inventario.uso_ingredientes.get)
+        quantidade = self.inventario.uso_ingredientes[mais_usado]
+        print(f"Ingrediente mais usado: {mais_usado} com {quantidade} usos.")
+        return mais_usado
     
-    def ticket_media(self):
-        return True
-    
+    def ticket_medio(self):
+        if not self.inventario.vendas:
+            print("Nenhuma venda registrada para calcular o ticket médio.")
+            return None
+
+        # Soma o total arrecadado em dinheiro
+        total_arrecadado = sum(prato.preco * quantidade for prato_nome, quantidade in self.inventario.vendas.items()
+                               for prato in self.inventario.pratos if prato.nome == prato_nome)
+
+        # Soma o total de pratos vendidos
+        total_vendas = sum(self.inventario.vendas.values())
+
+        # Calcula o ticket médio
+        ticket_medio = total_arrecadado / total_vendas
+        print(f"Ticket médio: R$ {ticket_medio:.2f}")
+        return ticket_medio
