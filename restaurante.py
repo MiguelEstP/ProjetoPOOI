@@ -125,14 +125,21 @@ class Gerencia(Pessoa):
             print(f"{tipo}: {qtd} mesas")    
 
     def controle_de_mesas(self, mesas):
-        print(mesas)
+        print("\n=== Mesas ===")
+        print(f"{'Ingrediente':<20}{'Quantidade':>10}")
+        print("-" * 30)
+        for item, quantidade in mesas.items():
+            item_formatado = item.replace('_', ' ').capitalize()
+            print(f"{item:<20}{quantidade:>10}")
+        print("-" * 30)
         menu = int(input('''1 - Reduzir mesas de 2 pessoas
               2 - Reduzir mesas de 4
               3 - Reduzir mesas de 8
               4 - Adicionar mesas de 2
               5 - Adicionar mesas de 4
               6 - Adicionar mesas de 8
-              7 - Alocar clientes'''))
+              7 - Alocar clientes
+              '''))
         if menu == 1:
             mesas['dois_lugares'] -= 1
         elif menu == 2:
