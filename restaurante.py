@@ -1,18 +1,17 @@
 class Cardapio:
     def __init__(self):
         self.pratos = [
-            Prato("Bruschetta com azeitona", ["azeitonas_pretas", "tomate", "manjericão", "azeite_oliva"], "entrada", 15.00, 10),
+            Prato("Bruschetta", ["tomate", "manjericão", "azeite_oliva"], "entrada", 15.00, 10),
             Prato("Salada Caprese", ["mussarela", "tomate", "manjericão"], "entrada", 18.00, 12),
-            Prato("Spaghetti ao molho de tomate e azeitonas", ["azeitonas_verdes", "massa_fresca", "molho_tomate", "manjericão"], "prato principal", 30.00, 20),
-            Prato("Lasanha à bolonhesa", ["azeitonas_verdes", "massa_fresca", "molho_tomate", "queijo_parmesao"], "prato principal", 35.00, 25),
-            Prato("Pizza Margherita", ["massa_fresca", "molho_tomate", "queijo_mussarela", "manjericão", "azeitonas_verdes"], "prato principal", 40.00, 18),
+            Prato("Spaghetti ao molho de tomate", ["massa_fresca", "molho_tomate", "manjericão"], "prato principal", 30.00, 20),
+            Prato("Lasanha à bolonhesa", ["massa_fresca", "molho_tomate", "queijo_parmesao"], "prato principal", 35.00, 25),
+            Prato("Pizza Margherita", ["massa_fresca", "molho_tomate", "queijo_mussarela", "manjericão"], "prato principal", 40.00, 18),
             Prato("Pizza Parma com rúcula", ["massa_fresca", "presunto_parma", "rúcula"], "prato principal", 45.00, 22),
             Prato("Gnocchi ao molho pesto", ["massa_fresca", "pesto"], "prato principal", 32.00, 20),
-            Prato("Risoto de azeitona com tomate seco", ["azeitonas_pretas", "arroz", "tomate_seco", "queijo_parmesao"], "prato principal", 38.00, 28),
-            Prato("Massa com azeitonas, azeite e alho", ["azeitonas_verdes", "azeitonas_pretas", "massa_fresca", "azeite_oliva", "alho"], "prato principal", 28.00, 15),
+            Prato("Risoto de tomate seco", ["arroz", "tomate_seco", "queijo_parmesao"], "prato principal", 38.00, 28),
+            Prato("Massa com azeite e alho", ["massa_fresca", "azeite_oliva", "alho"], "prato principal", 28.00, 15),
             Prato("Carpaccio de linguiça italiana", ["linguiça_italiana", "rúcula"], "entrada", 20.00, 10)
         ]
-        '''self.bebidas = [] - cpa vamos usar'''
 
 class Produto:
    def __init__(self, ingredientes, tipo, preco, tempo):
@@ -25,11 +24,6 @@ class Prato(Produto):
     def __init__(self, nome, ingredientes, tipo, preco, tempo):
         self.nome = nome
         super().__init__(ingredientes, tipo, preco, tempo)
-
-class Bebida(Produto):
-    def __init__(self, ingredientes, tipo, preco, tempo):
-        super().__init__(ingredientes, tipo, preco, tempo)
-
 
 class Inventario:
     def __init__(self, dinheiro, x, y, z):
@@ -64,8 +58,8 @@ class Pessoa(Inventario):
         self.__cpf = cpf
         self.salario = salario
     
-    def verificar_estoque(self):
-        print(self.estoque)
+    def verificar_estoque(self, estoque):
+        print(estoque)
     
     def verificar_cpf(self):
         return self.__cpf
@@ -97,19 +91,14 @@ class Cozinheiro(Pessoa):
         else:
             vendas[prato.nome] = 1
 
-        for pedido in self.pedidos:
-            if pedido.nome == prato:
-                self.pedidos.remove(pedido)
-                break
-        
         print(f'Mamma Mia!! O prato {prato.nome} foi feito com sucesso! HMMMMMM!!!!')
 
     
-    def verificar_estoque(self):   
+    def verificar_estoque(self, estoque):   
         print(f"{self.nome}: Verificando apenas ingredientes usados na cozinha.")
-        for item, quantidade in self.estoque.items():
+        for item, quantidade in estoque.items():
             if item in ["massa_fresca", "molho_tomate", "azeite_oliva"]:
-                print(f"{item}: {quantidade}")
+                print(f"{item}: {quantidade}", "HMMMMM!!")
     
     def verificar_pedidos(self):
         print(self.pedidos)
@@ -118,33 +107,25 @@ class Garcom(Pessoa):
     def __init__(self, nome, cpf, salario=1412):
         super().__init__(nome, cpf, salario)
 
-    def enviar_pedidos(self, pedido, cardápio):
-        for prato in cardápio:
-            if prato.nome == pedido:
-                self.pedidos.append(prato)
+    def enviar_pedidos(self, ingredientes, tipo, preco, tempo):
+        prato = Prato(ingredientes, tipo, preco, tempo)
+        self.pedidos.append(prato)
 
-    def verificar_estoque(self):
-        #return super().verificar_estoque()
-        indisponiveis = []
-        for item in self.estoque:
-            if self.estoque[item] < 1:
-                for prato in cardápio:
-                    if item in prato.ingredientes and not(prato in indisponiveis):
-                        indisponiveis.append(prato)
-        print(f'Os pratos {", ".join(indisponiveis)} estão indisponíveis no momento. :(')
+    def verificar_estoque(self, estoque):
+        return super().verificar_estoque()
     
 class Gerencia(Pessoa):
     def __init__(self, nome, cpf, salario=1412):
         super().__init__(nome, cpf, salario)
 
-    def verificar_estoque(self):
+    def verificar_estoque(self, mesas):
         print(f"{self.nome}: Conferindo mesas e estoque geral antes de atender.")
         print("Mesas disponíveis:")
-        for tipo, qtd in self.mesas.items():
+        for tipo, qtd in mesas.items():
             print(f"{tipo}: {qtd} mesas")    
 
-    def controle_de_mesas(self):
-        print(self.mesas)
+    def controle_de_mesas(self, mesas):
+        print(mesas)
         menu = int(input('''1 - Reduzir mesas de 2 pessoas
               2 - Reduzir mesas de 4
               3 - Reduzir mesas de 8
@@ -153,39 +134,44 @@ class Gerencia(Pessoa):
               6 - Adicionar mesas de 8
               7 - Alocar clientes'''))
         if menu == 1:
-            self.mesas['dois_lugares'] -= 1
+            mesas['dois_lugares'] -= 1
         elif menu == 2:
-            self.mesas['quatro_lugares'] -= 1
+            mesas['quatro_lugares'] -= 1
         elif menu == 3:
-            self.mesas['oito_lugares'] -= 1
+            mesas['oito_lugares'] -= 1
         elif menu == 4:
-            self.mesas['dois_lugares'] += 1
+            mesas['dois_lugares'] += 1
         elif menu == 5:
-            self.mesas['quatro_lugares'] += 1
+            mesas['quatro_lugares'] += 1
         elif menu == 6:
-            self.mesas['oito_lugares'] += 1
+            mesas['oito_lugares'] += 1
         elif menu == 7:
             valor = input('Quantos clientes? ')
             while valor > 0:
                 if valor >= 8:
-                    self.mesas['oito_lugares'] -= 1
+                    mesas['oito_lugares'] -= 1
                     valor -= 8
                 elif valor >=4:
-                    self.mesas['quatro_lugares'] -= 1
+                    mesas['quatro_lugares'] -= 1
                     valor -= 4
                 elif valor >=2:
-                    self.mesas['dois_lugares'] -= 1
+                    mesas['dois_lugares'] -= 1
                     valor -= 2
                 else:
                     print('error')
         else:
             print('error')
     
-    def controle_de_estoque(self):
-        print(self.estoque)
+    def controle_de_estoque(self, estoque):
+        print("\n=== Estoque Atual ===")
+        print(f"{'Ingrediente':<20}{'Quantidade':>10}")
+        print("-" * 30)
+        for item, quantidade in estoque.items():
+            print(f"{item:<20}{quantidade:>10}")
+        print("-" * 30)
         item, valor = input('Digite o item e o novo valor dele: ').split()
-        if item in self.estoque:
-            self.estoque[item] = max(0, int(valor))
+        if item in estoque:
+            estoque[item] = max(0, int(valor))
         else:
             print(f"Erro: Item '{item}' não encontrado no estoque.")
         
@@ -198,17 +184,17 @@ class Estatisticas:
         self.inventario = inventario
 
     def registrar_cozinheiro(self):
-        nome, cpf, salario, estagiario = input('Digite as informações base: ').split()
+        nome, cpf, salario, estagiario = input('Digite as informações base (nome/cpf/salário/estagiário(True/False)): ').split()
         cozinheiro = Cozinheiro(nome, int(cpf), float(salario), estagiario)
         self.cozinheiros.append(cozinheiro)
     
     def registrar_garcom(self):
-        nome, cpf, salario = input('Digite as informações base: ').split()
+        nome, cpf, salario = input('Digite as informações base (nome/cpf/salário): ').split()
         garcom = Garcom(nome, int(cpf), float(salario))
         self.garcons.append(garcom)
         
     def registrar_gerencia(self):
-        nome, cpf, salario = input('Digite as informações base: ').split()
+        nome, cpf, salario = input('Digite as informações base (nome/cpf/salário): ').split()
         gerente = Gerencia(nome, int(cpf), float(salario))
         self.gerencia.append(gerente)
     
@@ -232,13 +218,16 @@ class Estatisticas:
         print(f"Ingrediente mais usado: {mais_usado} com {quantidade} usos.")
         return mais_usado
     
-    def ticket_medio(self):
+    def ticket_medio(self, cardapio):
         if not self.inventario.vendas:
             print("Nenhuma venda registrada para calcular o ticket médio.")
             return None
 
-        total_arrecadado = sum(prato.preco * quantidade for prato_nome, quantidade in self.inventario.vendas.items()
-                               for prato in self.inventario.pratos if prato.nome == prato_nome)
+        total_arrecadado = sum(
+            prato.preco * quantidade
+            for prato_nome, quantidade in self.inventario.vendas.items()
+            for prato in cardapio.pratos if prato.nome == prato_nome
+        )
 
         total_vendas = sum(self.inventario.vendas.values())
 
