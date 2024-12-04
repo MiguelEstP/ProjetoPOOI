@@ -21,15 +21,18 @@ def menu_principal():
 def menu_estoque(gerencia):
     while True:
         print("\n=== Gerenciamento de Estoque ===")
-        print("1. Verificar Estoque")
+        print("1. Verificar Mesas")
         print("2. Atualizar Estoque")
-        print("3. Voltar")
+        print("3. Gerenciar mesas")
+        print("4. Voltar")
         opcao = input("Escolha uma opção: ")
         if opcao == "1":
             gerencia.verificar_estoque(inventario.mesas)
         elif opcao == "2":
             gerencia.controle_de_estoque(inventario.estoque)
         elif opcao == "3":
+            gerencia.controle_de_mesas(inventario.mesas)
+        elif opcao == "4":
             break
         else:
             print("Opção inválida.")
@@ -111,3 +114,4 @@ while True:
         break
     else:
         print("Opção inválida.")
+
